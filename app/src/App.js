@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 import twitterLogo from "./assets/twitter-logo.svg";
 import { checkIfWalletIsConnected } from "./utils/checkIfWalletIsConnected";
+import { connectWallet } from "./utils/connectWallet";
 
 const BUILDSPACE_TWITTER_HANDLE = "_buildspace";
 const TWITTER_LINK = `https://twitter.com/${BUILDSPACE_TWITTER_HANDLE}`;
@@ -16,8 +17,6 @@ const App = () => {
     window.addEventListener("load", onLoad);
     return () => window.removeEventListener("load", onLoad);
   }, []);
-
-  const connectWallet = async () => {};
 
   const connectToWalletButton = () => (
     <button

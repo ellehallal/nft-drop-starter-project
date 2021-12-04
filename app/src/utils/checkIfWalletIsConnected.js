@@ -21,9 +21,10 @@ const checkIfUserGrantedPermission = async (solana, setWalletAddress) => {
 
 const isPhantomWallet = (solana) => solana && solana.isPhantom;
 const logWalletFound = () => console.log("Phantom wallet found!");
+const logError = (error) => console.log(error);
+
 const alertWalletNotFound = () =>
   alert("Solana object not found! Get a Phantom Wallet 👻");
 
-const logError = (error) => console.log(error);
-const logPublicKey = (response) =>
+export const logPublicKey = (response) =>
   console.log("Connected with Public Key:", response.publicKey.toString());
