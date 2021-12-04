@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Connection, PublicKey } from "@solana/web3.js";
-import { Program, Provider, web3 } from "@project-serum/anchor";
+import { Program, web3 } from "@project-serum/anchor";
 import { MintLayout, TOKEN_PROGRAM_ID, Token } from "@solana/spl-token";
 import { programs } from "@metaplex/js";
 import "./CandyMachine.css";
@@ -9,15 +9,17 @@ import {
   TOKEN_METADATA_PROGRAM_ID,
   SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID,
 } from "./helpers";
+import { MintedItems } from "../components/mintedItems";
+import { MintNftButton } from "../components/mintNftButton";
+import { NftStats } from "../components/nftStats";
+import { getProvider } from "./utils/getProvider";
+import { parseStats } from "./utils/parseStats";
 const {
   metadata: { Metadata, MetadataProgram },
 } = programs;
 
 const config = new web3.PublicKey(process.env.REACT_APP_CANDY_MACHINE_CONFIG);
 const { SystemProgram } = web3;
-const opts = {
-  preflightCommitment: "processed",
-};
 
 const MAX_NAME_LENGTH = 32;
 const MAX_URI_LENGTH = 200;
@@ -26,74 +28,53 @@ const MAX_CREATOR_LEN = 32 + 1 + 1;
 
 const CandyMachine = ({ walletAddress }) => {
   const [machineStats, setMachineStats] = useState(null);
+  const [mints, setMints] = useState([]);
 
   useEffect(() => {
     getCandyMachineState();
+    getMints();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const getProvider = () => {
-    const rpcHost = process.env.REACT_APP_SOLANA_RPC_HOST;
-    // Create a new connection object
-    const connection = new Connection(rpcHost);
-
-    // Create a new Solana provider object
-    const provider = new Provider(
-      connection,
-      window.solana,
-      opts.preflightCommitment
-    );
-
-    return provider;
-  };
 
   // Declare getCandyMachineState as an async method
   const getCandyMachineState = async () => {
     const provider = getProvider();
-
     // Get metadata about your deployed candy machine program
     const idl = await Program.fetchIdl(candyMachineProgram, provider);
-
     // Create a program that you can call
     const program = new Program(idl, candyMachineProgram, provider);
-
     // Fetch the metadata from your candy machine
     const candyMachine = await program.account.candyMachine.fetch(
       process.env.REACT_APP_CANDY_MACHINE_ID
     );
+    const stats = parseStats(candyMachine, setMachineStats);
 
-    // Parse out all our metadata and log it out
-    const itemsAvailable = candyMachine.data.itemsAvailable.toNumber();
-    const itemsRedeemed = candyMachine.itemsRedeemed.toNumber();
-    const itemsRemaining = itemsAvailable - itemsRedeemed;
-    const goLiveData = candyMachine.data.goLiveDate.toNumber();
+    setMachineStats(stats);
+    console.log(stats);
+  };
 
-    // We will be using this later in our UI so let's generate this now
-    const goLiveDateTimeString = `${new Date(
-      goLiveData * 1000
-    ).toLocaleDateString()} @ ${new Date(
-      goLiveData * 1000
-    ).toLocaleTimeString()}`;
+  const getMints = async () => {
+    const data = await fetchHashTable(
+      process.env.REACT_APP_CANDY_MACHINE_ID,
+      true
+    );
 
-    setMachineStats({
-      itemsAvailable,
-      itemsRedeemed,
-      itemsRemaining,
-      goLiveData,
-      goLiveDateTimeString,
-    });
+    if (data.length) {
+      data.forEach(async (mint) => {
+        // Get URI
+        const response = await fetch(mint.data.uri);
+        const parse = await response.json();
+        console.log("Past Minted NFT: ", mint);
 
-    console.log({
-      itemsAvailable,
-      itemsRedeemed,
-      itemsRemaining,
-      goLiveData,
-      goLiveDateTimeString,
-    });
+        // Get image URI
+        if (!mints.find((mint) => mint === parse.image)) {
+          setMints((prevState) => [...prevState, parse.image]);
+        }
+      });
+    }
   };
 
   // Actions
-  // eslint-disable-next-line no-unused-vars
   const fetchHashTable = async (hash, metadataEnabled) => {
     const connection = new web3.Connection(
       process.env.REACT_APP_SOLANA_RPC_HOST
@@ -175,7 +156,6 @@ const CandyMachine = ({ walletAddress }) => {
     )[0];
   };
 
-  // eslint-disable-next-line no-unused-vars
   const mintToken = async () => {
     try {
       const mint = web3.Keypair.generate();
@@ -322,11 +302,9 @@ const CandyMachine = ({ walletAddress }) => {
   return (
     machineStats && (
       <div className="machine-container">
-        <p>{`Drop Date: ${machineStats.goLiveDateTimeString}`}</p>
-        <p>{`Items Minted: ${machineStats.itemsRedeemed} / ${machineStats.itemsAvailable}`}</p>
-        <button className="cta-button mint-button" onClick={null}>
-          Mint NFT
-        </button>
+        <NftStats stats={machineStats} />
+        <MintNftButton onClick={mintToken} />
+        {mints.length > 0 && <MintedItems items={mints} />}
       </div>
     )
   );
