@@ -32,6 +32,7 @@ const CandyMachine = ({ walletAddress }) => {
 
   useEffect(() => {
     getCandyMachineState();
+    getMints();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -51,24 +52,26 @@ const CandyMachine = ({ walletAddress }) => {
     );
 
     setStats(candyMachine, setMachineStats);
+  };
 
+  const getMints = async () => {
     const data = await fetchHashTable(
       process.env.REACT_APP_CANDY_MACHINE_ID,
       true
     );
 
-    if (data.length !== 0) {
-      for (const mint of data) {
+    if (data.length) {
+      data.forEach(async (mint) => {
         // Get URI
         const response = await fetch(mint.data.uri);
         const parse = await response.json();
-        console.log("Past Minted NFT", mint);
+        console.log("Past Minted NFT: ", mint);
 
         // Get image URI
         if (!mints.find((mint) => mint === parse.image)) {
           setMints((prevState) => [...prevState, parse.image]);
         }
-      }
+      });
     }
   };
 
