@@ -9,7 +9,7 @@ import {
   TOKEN_METADATA_PROGRAM_ID,
   SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID,
 } from "./helpers";
-import { MintedItems } from "../components/mintedItems";
+import { MintedSnacks } from "../components/mintedItems";
 import { MintNftButton } from "../components/mintNftButton";
 import { NftStats } from "../components/nftStats";
 import { getProvider } from "./utils/getProvider";
@@ -321,7 +321,7 @@ const CandyMachine = ({ walletAddress }) => {
         <NftStats stats={machineStats} />
         {isSoldOut() && <p className="sub-text">Sold Out 🙊</p>}
         <MintNftButton onClick={mintToken} disabled={isDisabled} />
-        {mints.length > 0 && <MintedItems items={mints} />}
+        {mints.length > 0 && <MintedSnacks items={mints} />}
       </div>
     )
   );
