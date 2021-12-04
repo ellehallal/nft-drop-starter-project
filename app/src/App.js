@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import twitterLogo from "./assets/twitter-logo.svg";
 import { connectToWalletButton } from "./components/connectToWalletButton";
+import { Footer } from "./components/footer";
 import { checkIfWalletIsConnected } from "./utils/checkIfWalletIsConnected";
-
-const BUILDSPACE_TWITTER_HANDLE = "_buildspace";
-const TWITTER_LINK = `https://twitter.com/${BUILDSPACE_TWITTER_HANDLE}`;
 
 const App = () => {
   const [walletAddress, setWalletAddress] = useState(null);
@@ -26,15 +23,7 @@ const App = () => {
           <p className="sub-text">NFT drop machine with fair mint</p>
           {!walletAddress && connectToWalletButton(setWalletAddress)}
         </div>
-        <div className="footer-container">
-          <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
-          <a
-            className="footer-text"
-            href={TWITTER_LINK}
-            target="_blank"
-            rel="noreferrer"
-          >{`built on @${BUILDSPACE_TWITTER_HANDLE}`}</a>
-        </div>
+        <Footer />
       </div>
     </div>
   );
