@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Connection, PublicKey } from "@solana/web3.js";
 import { Program, Provider, web3 } from "@project-serum/anchor";
 import { MintLayout, TOKEN_PROGRAM_ID, Token } from "@solana/spl-token";
@@ -25,9 +25,12 @@ const MAX_SYMBOL_LENGTH = 10;
 const MAX_CREATOR_LEN = 32 + 1 + 1;
 
 const CandyMachine = ({ walletAddress }) => {
+  const [machineStats, setMachineStats] = useState(null);
+
   useEffect(() => {
     getCandyMachineState();
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const getProvider = () => {
     const rpcHost = process.env.REACT_APP_SOLANA_RPC_HOST;
@@ -72,6 +75,14 @@ const CandyMachine = ({ walletAddress }) => {
       goLiveData * 1000
     ).toLocaleTimeString()}`;
 
+    setMachineStats({
+      itemsAvailable,
+      itemsRedeemed,
+      itemsRemaining,
+      goLiveData,
+      goLiveDateTimeString,
+    });
+
     console.log({
       itemsAvailable,
       itemsRedeemed,
@@ -82,6 +93,7 @@ const CandyMachine = ({ walletAddress }) => {
   };
 
   // Actions
+  // eslint-disable-next-line no-unused-vars
   const fetchHashTable = async (hash, metadataEnabled) => {
     const connection = new web3.Connection(
       process.env.REACT_APP_SOLANA_RPC_HOST
@@ -163,6 +175,7 @@ const CandyMachine = ({ walletAddress }) => {
     )[0];
   };
 
+  // eslint-disable-next-line no-unused-vars
   const mintToken = async () => {
     try {
       const mint = web3.Keypair.generate();
@@ -307,13 +320,15 @@ const CandyMachine = ({ walletAddress }) => {
   };
 
   return (
-    <div className="machine-container">
-      <p>Drop Date:</p>
-      <p>Items Minted:</p>
-      <button className="cta-button mint-button" onClick={mintToken}>
-        Mint NFT
-      </button>
-    </div>
+    machineStats && (
+      <div className="machine-container">
+        <p>{`Drop Date: ${machineStats.goLiveDateTimeString}`}</p>
+        <p>{`Items Minted: ${machineStats.itemsRedeemed} / ${machineStats.itemsAvailable}`}</p>
+        <button className="cta-button mint-button" onClick={null}>
+          Mint NFT
+        </button>
+      </div>
+    )
   );
 };
 
