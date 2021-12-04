@@ -175,7 +175,6 @@ const CandyMachine = ({ walletAddress }) => {
     )[0];
   };
 
-  // eslint-disable-next-line no-unused-vars
   const mintToken = async () => {
     try {
       const mint = web3.Keypair.generate();
@@ -324,7 +323,7 @@ const CandyMachine = ({ walletAddress }) => {
       <div className="machine-container">
         <p>{`Drop Date: ${machineStats.goLiveDateTimeString}`}</p>
         <p>{`Items Minted: ${machineStats.itemsRedeemed} / ${machineStats.itemsAvailable}`}</p>
-        <button className="cta-button mint-button" onClick={null}>
+        <button className="cta-button mint-button" onClick={mintToken}>
           Mint NFT
         </button>
       </div>
