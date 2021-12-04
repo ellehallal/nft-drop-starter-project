@@ -40,7 +40,7 @@ export const CountdownTimer = ({ dropDate }) => {
 
   return (
     <div className="timer-container">
-      <p className="timer-header">Candy Drop Starting In</p>
+      <p className="timer-header">Snack drop countdown:</p>
       {timerString && <p className="timer-value">{`⏰ ${timerString}`}</p>}
     </div>
   );

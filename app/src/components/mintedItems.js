@@ -1,6 +1,6 @@
-export const MintedItems = ({ items }) => (
+export const MintedSnacks = ({ items }) => (
   <div className="gif-container">
-    <p className="sub-text">Minted Items ✨</p>
+    <p className="sub-text">✨ Minted Snacks ✨</p>
     <div className="gif-grid">
       {items.map((item) => (
         <div className="gif-item" key={item}>
