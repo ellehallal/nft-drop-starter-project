@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import twitterLogo from "./assets/twitter-logo.svg";
+import { connectToWalletButton } from "./components/connectToWalletButton";
 import { checkIfWalletIsConnected } from "./utils/checkIfWalletIsConnected";
-import { connectWallet } from "./utils/connectWallet";
 
 const BUILDSPACE_TWITTER_HANDLE = "_buildspace";
 const TWITTER_LINK = `https://twitter.com/${BUILDSPACE_TWITTER_HANDLE}`;
@@ -18,22 +18,13 @@ const App = () => {
     return () => window.removeEventListener("load", onLoad);
   }, []);
 
-  const connectToWalletButton = () => (
-    <button
-      className="cta-button connect-wallet-button"
-      onClick={connectWallet}
-    >
-      Connect to Wallet
-    </button>
-  );
-
   return (
     <div className="App">
       <div className="container">
         <div className="header-container">
           <p className="header">🍭 Candy Drop</p>
           <p className="sub-text">NFT drop machine with fair mint</p>
-          {!walletAddress && connectToWalletButton()}
+          {!walletAddress && connectToWalletButton(setWalletAddress)}
         </div>
         <div className="footer-container">
           <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
