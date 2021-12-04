@@ -1,17 +1,17 @@
 {
-  "name": "STRAWBERRY_MELODY_POP_NFT",
+  "name": "SALT_AND_VINEGAR_CHIPSTICKS_NFT",
   "symbol": "",
-  "image": "001.png",
+  "image": "002.png",
   "properties": {
     "files": [
       {
-        "uri": "001.png",
+        "uri": "003.png",
         "type": "image/png"
       }
     ],
     "creators": [
       {
-        "address": "INSERT_CREATOR_WALLET_ADDRESS_HERE",
+        "address": "FPrscA5Hx6s3SHHCLWKNLQ3Nrfc7hRfUHBLewrG1CKzv",
         "share": 100
       }
     ]
