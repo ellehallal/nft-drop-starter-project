@@ -14,6 +14,7 @@ import { MintNftButton } from "../components/mintNftButton";
 import { NftStats } from "../components/nftStats";
 import { getProvider } from "./utils/getProvider";
 import { parseStats } from "./utils/parseStats";
+import { CountdownTimer } from "../CountdownTimer";
 const {
   metadata: { Metadata, MetadataProgram },
 } = programs;
@@ -299,9 +300,21 @@ const CandyMachine = ({ walletAddress }) => {
     });
   };
 
+  const renderDropTimer = () => {
+    const currentDate = new Date();
+    const dropDate = new Date(machineStats.goLiveData * 1000);
+
+    if (currentDate < dropDate) {
+      return <CountdownTimer dropDate={dropDate} />;
+    }
+
+    return <p>{`Drop Date: ${machineStats.goLiveDateTimeString}`}</p>;
+  };
+
   return (
     machineStats && (
       <div className="machine-container">
+        {renderDropTimer()}
         <NftStats stats={machineStats} />
         <MintNftButton onClick={mintToken} />
         {mints.length > 0 && <MintedItems items={mints} />}
