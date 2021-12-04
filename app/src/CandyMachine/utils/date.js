@@ -1,9 +1,6 @@
 export const isBeforeGoLiveDate = (stats) => {
-  console.log({ stats });
   const currentDate = new Date();
   const dropDate = getDropDate(stats);
-
-  console.log(dropDate);
 
   return currentDate < dropDate;
 };
