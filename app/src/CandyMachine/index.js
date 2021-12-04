@@ -13,6 +13,7 @@ import { MintedItems } from "../components/mintedItems";
 import { MintNftButton } from "../components/mintNftButton";
 import { NftStats } from "../components/nftStats";
 import { getProvider } from "./utils/getProvider";
+import { setStats } from "./utils/setStats";
 const {
   metadata: { Metadata, MetadataProgram },
 } = programs;
@@ -49,34 +50,7 @@ const CandyMachine = ({ walletAddress }) => {
       process.env.REACT_APP_CANDY_MACHINE_ID
     );
 
-    // Parse out all our metadata and log it out
-    const itemsAvailable = candyMachine.data.itemsAvailable.toNumber();
-    const itemsRedeemed = candyMachine.itemsRedeemed.toNumber();
-    const itemsRemaining = itemsAvailable - itemsRedeemed;
-    const goLiveData = candyMachine.data.goLiveDate.toNumber();
-
-    // We will be using this later in our UI so let's generate this now
-    const goLiveDateTimeString = `${new Date(
-      goLiveData * 1000
-    ).toLocaleDateString()} @ ${new Date(
-      goLiveData * 1000
-    ).toLocaleTimeString()}`;
-
-    setMachineStats({
-      itemsAvailable,
-      itemsRedeemed,
-      itemsRemaining,
-      goLiveData,
-      goLiveDateTimeString,
-    });
-
-    console.log({
-      itemsAvailable,
-      itemsRedeemed,
-      itemsRemaining,
-      goLiveData,
-      goLiveDateTimeString,
-    });
+    setStats(candyMachine, setMachineStats);
 
     const data = await fetchHashTable(
       process.env.REACT_APP_CANDY_MACHINE_ID,
@@ -99,7 +73,6 @@ const CandyMachine = ({ walletAddress }) => {
   };
 
   // Actions
-  // eslint-disable-next-line no-unused-vars
   const fetchHashTable = async (hash, metadataEnabled) => {
     const connection = new web3.Connection(
       process.env.REACT_APP_SOLANA_RPC_HOST
