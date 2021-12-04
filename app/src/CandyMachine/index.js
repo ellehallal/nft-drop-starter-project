@@ -10,6 +10,8 @@ import {
   SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID,
 } from "./helpers";
 import { MintedItems } from "../components/mintedItems";
+import { MintNftButton } from "../components/mintNftButton";
+import { NftStats } from "../components/nftStats";
 const {
   metadata: { Metadata, MetadataProgram },
 } = programs;
@@ -342,12 +344,8 @@ const CandyMachine = ({ walletAddress }) => {
   return (
     machineStats && (
       <div className="machine-container">
-        <p>{`Drop Date: ${machineStats.goLiveDateTimeString}`}</p>
-        <p>{`Items Minted: ${machineStats.itemsRedeemed} / ${machineStats.itemsAvailable}`}</p>
-        <button className="cta-button mint-button" onClick={mintToken}>
-          Mint NFT
-        </button>
-        {console.log({ mints })}
+        <NftStats stats={machineStats} />
+        <MintNftButton onClick={mintToken} />
         {mints.length > 0 && <MintedItems items={mints} />}
       </div>
     )
