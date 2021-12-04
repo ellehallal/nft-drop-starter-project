@@ -13,7 +13,7 @@ import { MintedItems } from "../components/mintedItems";
 import { MintNftButton } from "../components/mintNftButton";
 import { NftStats } from "../components/nftStats";
 import { getProvider } from "./utils/getProvider";
-import { setStats } from "./utils/setStats";
+import { parseStats } from "./utils/parseStats";
 const {
   metadata: { Metadata, MetadataProgram },
 } = programs;
@@ -39,19 +39,18 @@ const CandyMachine = ({ walletAddress }) => {
   // Declare getCandyMachineState as an async method
   const getCandyMachineState = async () => {
     const provider = getProvider();
-
     // Get metadata about your deployed candy machine program
     const idl = await Program.fetchIdl(candyMachineProgram, provider);
-
     // Create a program that you can call
     const program = new Program(idl, candyMachineProgram, provider);
-
     // Fetch the metadata from your candy machine
     const candyMachine = await program.account.candyMachine.fetch(
       process.env.REACT_APP_CANDY_MACHINE_ID
     );
+    const stats = parseStats(candyMachine, setMachineStats);
 
-    setStats(candyMachine, setMachineStats);
+    setMachineStats(stats);
+    console.log(stats);
   };
 
   const getMints = async () => {
