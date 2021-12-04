@@ -4,6 +4,7 @@ import { ConnectToWalletButton } from "./components/connectToWalletButton";
 import { Footer } from "./components/footer";
 import { checkIfWalletIsConnected } from "./utils/checkIfWalletIsConnected";
 import { connectWallet } from "./utils/connectWallet";
+import CandyMachine from "./CandyMachine";
 
 const App = () => {
   const [walletAddress, setWalletAddress] = useState(null);
@@ -28,6 +29,7 @@ const App = () => {
             />
           )}
         </div>
+        {walletAddress && <CandyMachine walletAddress={window.solana} />}
         <Footer />
       </div>
     </div>
