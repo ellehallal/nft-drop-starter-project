@@ -1,11 +1,11 @@
 {
   "name": "STRAWBERRY_MELODY_POP_NFT",
   "symbol": "",
-  "image": "001.png",
+  "image": "0.png",
   "properties": {
     "files": [
       {
-        "uri": "001.png",
+        "uri": "0.png",
         "type": "image/png"
       }
     ],
