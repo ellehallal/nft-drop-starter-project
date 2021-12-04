@@ -15,6 +15,7 @@ import { NftStats } from "../components/nftStats";
 import { getProvider } from "./utils/getProvider";
 import { parseStats } from "./utils/parseStats";
 import { CountdownTimer } from "../CountdownTimer";
+import { getDropDate, isBeforeGoLiveDate } from "./utils/date";
 const {
   metadata: { Metadata, MetadataProgram },
 } = programs;
@@ -300,15 +301,21 @@ const CandyMachine = ({ walletAddress }) => {
     });
   };
 
-  const renderDropTimer = () => {
-    const currentDate = new Date();
-    const dropDate = new Date(machineStats.goLiveData * 1000);
+  // const renderDropTimer = () => {
+  //   if (isBeforeGoLiveDate(machineStats)) {
+  //     return <CountdownTimer dropDate={() => getDropDate(machineStats)} />;
+  //   }
 
-    if (currentDate < dropDate) {
+  //   return <p>{`Drop Date: ${machineStats.goLiveDateTimeString}`}</p>;
+  // };
+
+  const renderDropTimer = () => {
+    if (isBeforeGoLiveDate(machineStats)) {
+      console.log("Before drop date!");
+      const dropDate = getDropDate(machineStats);
+
       return <CountdownTimer dropDate={dropDate} />;
     }
-
-    return <p>{`Drop Date: ${machineStats.goLiveDateTimeString}`}</p>;
   };
 
   return (
@@ -316,7 +323,10 @@ const CandyMachine = ({ walletAddress }) => {
       <div className="machine-container">
         {renderDropTimer()}
         <NftStats stats={machineStats} />
-        <MintNftButton onClick={mintToken} />
+        <MintNftButton
+          onClick={mintToken}
+          disabled={isBeforeGoLiveDate(machineStats)}
+        />
         {mints.length > 0 && <MintedItems items={mints} />}
       </div>
     )
