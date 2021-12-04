@@ -1,25 +1,29 @@
-export const checkIfWalletIsConnected = async () => {
+export const checkIfWalletIsConnected = async (setWalletAddress) => {
   try {
     const { solana } = window;
 
     if (isPhantomWallet(solana)) {
-      logWalletFound()
-      checkIfUserGrantedPermission(solana)
+      logWalletFound();
+      checkIfUserGrantedPermission(solana, setWalletAddress);
     } else {
-      alertWalletNotFound()
+      alertWalletNotFound();
     }
   } catch (error) {
-    logError(error)
+    logError(error);
   }
 };
 
-const checkIfUserGrantedPermission = async (solana) => {
+const checkIfUserGrantedPermission = async (solana, setWalletAddress) => {
   const response = await solana.connect({ onlyIfTrusted: true });
-  logPublicKey(response)
-}
+  logPublicKey(response);
+  setWalletAddress(response.publicKey.toString());
+};
 
-const isPhantomWallet = (solana) => solana && solana.isPhantom
-const logWalletFound = () => console.log('Phantom wallet found!');
-const alertWalletNotFound = () => alert('Solana object not found! Get a Phantom Wallet 👻');
-const logError = (error) => console.log(error)
-const logPublicKey = (response) => console.log('Connected with Public Key:', response.publicKey.toString());
+const isPhantomWallet = (solana) => solana && solana.isPhantom;
+const logWalletFound = () => console.log("Phantom wallet found!");
+const alertWalletNotFound = () =>
+  alert("Solana object not found! Get a Phantom Wallet 👻");
+
+const logError = (error) => console.log(error);
+const logPublicKey = (response) =>
+  console.log("Connected with Public Key:", response.publicKey.toString());
