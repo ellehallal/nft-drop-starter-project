@@ -14,6 +14,8 @@ import { MintNftButton } from "../components/mintNftButton";
 import { NftStats } from "../components/nftStats";
 import { getProvider } from "./utils/getProvider";
 import { parseStats } from "./utils/parseStats";
+import { CountdownTimer } from "../CountdownTimer";
+import { getDropDate, isBeforeGoLiveDate } from "./utils/date";
 const {
   metadata: { Metadata, MetadataProgram },
 } = programs;
@@ -299,11 +301,26 @@ const CandyMachine = ({ walletAddress }) => {
     });
   };
 
+  const renderDropTimer = () => {
+    if (isBeforeGoLiveDate(machineStats)) {
+      console.log("Before drop date!");
+      const dropDate = getDropDate(machineStats);
+
+      return <CountdownTimer dropDate={dropDate} />;
+    }
+  };
+
+  const isSoldOut = () =>
+    machineStats.itemsRedeemed === machineStats.itemsAvailable;
+  const isDisabled = () => isBeforeGoLiveDate(machineStats) || isSoldOut();
+
   return (
     machineStats && (
       <div className="machine-container">
+        {renderDropTimer()}
         <NftStats stats={machineStats} />
-        <MintNftButton onClick={mintToken} />
+        {isSoldOut() && <p className="sub-text">Sold Out 🙊</p>}
+        <MintNftButton onClick={mintToken} disabled={isDisabled} />
         {mints.length > 0 && <MintedItems items={mints} />}
       </div>
     )
