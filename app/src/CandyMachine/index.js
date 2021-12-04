@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Connection, PublicKey } from "@solana/web3.js";
-import { Program, Provider, web3 } from "@project-serum/anchor";
+import { Program, web3 } from "@project-serum/anchor";
 import { MintLayout, TOKEN_PROGRAM_ID, Token } from "@solana/spl-token";
 import { programs } from "@metaplex/js";
 import "./CandyMachine.css";
@@ -12,15 +12,13 @@ import {
 import { MintedItems } from "../components/mintedItems";
 import { MintNftButton } from "../components/mintNftButton";
 import { NftStats } from "../components/nftStats";
+import { getProvider } from "./utils/getProvider";
 const {
   metadata: { Metadata, MetadataProgram },
 } = programs;
 
 const config = new web3.PublicKey(process.env.REACT_APP_CANDY_MACHINE_CONFIG);
 const { SystemProgram } = web3;
-const opts = {
-  preflightCommitment: "processed",
-};
 
 const MAX_NAME_LENGTH = 32;
 const MAX_URI_LENGTH = 200;
@@ -35,21 +33,6 @@ const CandyMachine = ({ walletAddress }) => {
     getCandyMachineState();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const getProvider = () => {
-    const rpcHost = process.env.REACT_APP_SOLANA_RPC_HOST;
-    // Create a new connection object
-    const connection = new Connection(rpcHost);
-
-    // Create a new Solana provider object
-    const provider = new Provider(
-      connection,
-      window.solana,
-      opts.preflightCommitment
-    );
-
-    return provider;
-  };
 
   // Declare getCandyMachineState as an async method
   const getCandyMachineState = async () => {
