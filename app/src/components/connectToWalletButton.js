@@ -1,10 +1,5 @@
-import { connectWallet } from "../utils/connectWallet";
-
-export const connectToWalletButton = (setWalletAddress) => (
-  <button
-    className="cta-button connect-wallet-button"
-    onClick={() => connectWallet(setWalletAddress)}
-  >
+export const ConnectToWalletButton = ({ onClick }) => (
+  <button className="cta-button connect-wallet-button" onClick={onClick}>
     Connect to Wallet
   </button>
 );

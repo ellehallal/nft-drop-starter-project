@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import { connectToWalletButton } from "./components/connectToWalletButton";
+import { ConnectToWalletButton } from "./components/connectToWalletButton";
 import { Footer } from "./components/footer";
 import { checkIfWalletIsConnected } from "./utils/checkIfWalletIsConnected";
+import { connectWallet } from "./utils/connectWallet";
 
 const App = () => {
   const [walletAddress, setWalletAddress] = useState(null);
@@ -21,7 +22,11 @@ const App = () => {
         <div className="header-container">
           <p className="header">🍭 Candy Drop</p>
           <p className="sub-text">NFT drop machine with fair mint</p>
-          {!walletAddress && connectToWalletButton(setWalletAddress)}
+          {!walletAddress && (
+            <ConnectToWalletButton
+              onClick={() => connectWallet(setWalletAddress)}
+            />
+          )}
         </div>
         <Footer />
       </div>

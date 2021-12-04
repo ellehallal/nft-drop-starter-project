@@ -5,7 +5,7 @@ export const connectWallet = async (setWalletAddress) => {
 
   if (solana) {
     const response = await solana.connect();
-    logPublicKey(response);
     setWalletAddress(response.publicKey.toString());
+    logPublicKey(response);
   }
 };
